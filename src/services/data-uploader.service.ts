@@ -6,6 +6,12 @@ export class DataUploaderService{
 	public storageServiceProvider: AWSProviderService | undefined;
   public keys: StorageKeys | undefined
 
+
+  /**
+   * Use to initialize the storage provider class and relevent keys
+   * @param storageType {string} storage provider
+   * @param keys {object} key object for storage provider
+   */
 	async init(storageType: string, keys: StorageKeys){
 		switch(storageType){
 			case 'AWS_S3':
@@ -18,6 +24,12 @@ export class DataUploaderService{
 		} 
 	}
 
+
+  /**
+   * Use to upload file to the storage
+   * @param filePath {string} path of the file
+   * @returns {object} objectKey
+   */
 	async uploadObjectToStorage(filePath: string){
     logger.debug('keys: ', this.keys)
     let keysObject
@@ -28,6 +40,12 @@ export class DataUploaderService{
     return keysObject
 	}
 
+
+  /**
+   * Use to upload folder to the storage
+   * @param folderPath {string} path of the file
+   * @returns {object} objectKeys
+   */
   async uploadFolderToStorage(folderPath: string){
     let keysObject
     if(this.keys && this.storageServiceProvider){
@@ -37,6 +55,11 @@ export class DataUploaderService{
     return keysObject
 	}
 
+  /**
+   * Use to upload folder recursively to the storage
+   * @param folderPath {string} path of the folder
+   * @returns {object} objectKeys
+   */
   async uploadFolderRecursivelyToStorage(folderPath: string){
     let keyList: string[] = []
     if(this.keys && this.storageServiceProvider){

@@ -19,7 +19,7 @@ fileRouter.post('/fileDetails', async (req: Request, res: Response)=> {
     let filePath: string = req.query.filePath || req.body.filePath
     try{
       let metaData:any = await fileDetailsService.getFileDetails(filePath)
-      logger.debug(metaData)
+      //logger.debug(metaData)
       res.send({
         success: true,
         ...metaData
