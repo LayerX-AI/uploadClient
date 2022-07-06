@@ -1,22 +1,23 @@
 /**
- * @class FileUploadService
- * purpose of FileUploadService is to handle upload of files to storages
- * @description FileUploadService handle AWS S3,... uploads for single file, single folder and single folder with recursivley
+ * @class AWSProviderService
+ * purpose of AWSProviderService is to handle upload of files to storages
+ * @description AWSProviderService handle AWS S3 uploads for single file, single folder and single folder with recursivley
  * @author chathushka
  */
 import { logger } from '../config';
 import fs from 'fs-extra';
-import {AwsCloudService} from '../services/aws-storage.service';
+import {AwsCloudService} from './aws-storage.service';
 import MongoDBCurdService from './mongodb-curd.service';
 import * as ffmpeg from "fluent-ffmpeg";
 import { IMetaData } from '../model/metaData';
+import { StorageKeys } from './data-uploader.service';
 
 
 
 const awsCloudService = new AwsCloudService()
 const mongoDBCurdService = new MongoDBCurdService()
 
-export class FileUploadService {
+export class AWSProviderService {
   constructor(
   ) {}
 
@@ -25,20 +26,27 @@ export class FileUploadService {
    * @param filePath {string} path of the file
    * @returns 
    */
-  async uploadObjectToStorage(filePath: string){
+  async uploadObjectToStorage(filePath: string, awsKey: StorageKeys){
 
     logger.debug('file path: ', filePath)
     let filePathArray = filePath.split(/\//);
     let fileName = filePathArray[filePathArray.length - 1]
     let key = `${fileName}`
     try{
-      await awsCloudService.uploadFileFromLoaclStorage(filePath, key);
+      await awsCloudService.uploadFileFromLoaclStorage(filePath, key, awsKey);
       logger.debug('file upload success', key)
+      return {
+        sucess: true,
+        objectKey: key
+      }
     }catch(error){
       logger.error('file upload failed', error)
-      return
+      return {
+        sucess: false,
+        objectKey: ''
+      }
     }
-    await this.updateDataLakeMetadata(key, fileName, filePath);
+    //await this.updateDataLakeMetadata(key, fileName, filePath);
   };
 
   /**
@@ -46,12 +54,12 @@ export class FileUploadService {
    * @param folderPath {string} path of the folder
    * @returns 
    */
-  async uploadFolderToStorage(folderPath: string){
-    if(!folderPath) return
+  async uploadFolderToStorage(folderPath: string, awsKey: StorageKeys){
 
     var files = fs.readdirSync(folderPath);
     logger.debug(files);
     let types = ['mp4', 'jpg', 'jpeg', 'png', 'mkv']
+    let keys = []
     for(let fileName of files){
       let fileNameArray = fileName.split('.');
       let extention = fileNameArray[fileNameArray.length - 1]
@@ -61,14 +69,19 @@ export class FileUploadService {
         let key = `folderTwo/${fileName}`
         let filePath = `${folderPath}/${fileName}`
         try{
-          await awsCloudService.uploadFileFromLoaclStorage(filePath, key);
+          await awsCloudService.uploadFileFromLoaclStorage(filePath, key, awsKey);
+          keys.push(key)
           logger.debug('file upload success', key)
         }catch(error){
           logger.error(`file path ${filePath} upload failed`, error)
           continue
         }
-        await this.updateDataLakeMetadata(key, fileName, filePath);
+        //await this.updateDataLakeMetadata(key, fileName, filePath);
       }
+    }
+    return {
+      sucess: true,
+      objectKeys: keys
     }
   };
 
@@ -77,7 +90,7 @@ export class FileUploadService {
    * @param folderPath {string} path of the folder
    * @returns 
    */
-  async uploadFolderRecursivelyToStorage(folderPath: string){
+  async uploadFolderRecursivelyToStorage(folderPath: string, awsKey: StorageKeys, keys: string[]){
     if(!folderPath) return
 
     var files = fs.readdirSync(folderPath);
@@ -95,16 +108,17 @@ export class FileUploadService {
         let filePath = `${folderPath}/${fileName}`
 
         try{
-          await awsCloudService.uploadFileFromLoaclStorage(`${folderPath}/${fileName}`, key);
+          await awsCloudService.uploadFileFromLoaclStorage(`${folderPath}/${fileName}`, key, awsKey);
           logger.debug(`file path ${filePath}  upload success`, key)
+          keys.push(key)
         }catch(error){
           logger.error(`file path ${filePath} upload failed`, error)
           continue
         }
-        await this.updateDataLakeMetadata(key, fileName, filePath);
+        //await this.updateDataLakeMetadata(key, fileName, filePath);
       }
       if(fileNameArray.length == 1){
-        await this.uploadFolderRecursivelyToStorage(`${folderPath}/${fileName}`);
+        await this.uploadFolderRecursivelyToStorage(`${folderPath}/${fileName}`, awsKey, keys);
       }
     }
   };

@@ -8,6 +8,7 @@ import * as AWS from 'aws-sdk';
 import fs from 'fs-extra';
 import { logger } from '../config';
 import { AwsConfiguration } from '../settings/aws-configuration.settings';
+import { StorageKeys } from './data-uploader.service';
 
 const AWS_ACCESS_KEY = AwsConfiguration.AWS_ACCESS_KEY;
 const AWS_SECRET_KEY = AwsConfiguration.AWS_SECRET_KEY;
@@ -23,12 +24,13 @@ export class AwsCloudService {
    * Use for Initialize the s3Bucket
    * @returns initialized s3Bucket
    */
-   async initAWS() {
+   async initAWS(awsKeys: StorageKeys) {
+     logger.debug('initAWS:', awsKeys)
     const s3Bucket = new AWS.S3({
-      accessKeyId: AWS_ACCESS_KEY,
-      secretAccessKey: AWS_SECRET_KEY,
+      accessKeyId: awsKeys.accessKeyId,
+      secretAccessKey: awsKeys.secretAccessKey,
       signatureVersion: 'v4',
-      region: AWS_REGION,
+      region: awsKeys.region,
     });
     return s3Bucket;
   }
@@ -38,12 +40,12 @@ export class AwsCloudService {
    * @param filePath {string} path of the file
    * @param key {string} AWS S3 key
    */
-  async uploadFileFromLoaclStorage(filePath: string, key: string){
-    let s3Bucket = await this.initAWS();
+  async uploadFileFromLoaclStorage(filePath: string, key: string, awsKeys: StorageKeys){
+    let s3Bucket = await this.initAWS(awsKeys);
 
     logger.debug(filePath)
     const params = {
-        Bucket: AWS_BUCKET_NAME || 'testbucketdatalake', // pass your bucket name
+        Bucket: awsKeys.bucket || 'testbucketdatalake', // pass your bucket name
         Key: key, // file will be saved as key
         Body: fs.createReadStream(filePath)
     };
@@ -59,8 +61,8 @@ export class AwsCloudService {
    * @param data {buffer} data buffer
    * @param key {string} AWS S3 key
    */
-  async uploadFileAPI(data: string, key: string){
-    let s3Bucket = this.initAWS();
+  async uploadFileAPI(data: string, key: string, awsKeys: StorageKeys){
+    let s3Bucket = this.initAWS(awsKeys);
 
     const params = {
         Bucket: AWS_BUCKET_NAME || 'testbucketdatalake', // pass your bucket name

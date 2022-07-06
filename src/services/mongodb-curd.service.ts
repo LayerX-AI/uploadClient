@@ -26,4 +26,12 @@ export default class MongoDBCurdService{
         logger.debug('metaData failed')
       })
   }
+
+  async findMetaData(objectKey: string){
+    return MetaData.findOne({objectKey: objectKey})
+  }
+
+  async updateMetaData(objectKey: string, newMetaData: IMetaData){
+    return MetaData.updateOne({objectKey: objectKey}, newMetaData)
+  }
 }

@@ -6,6 +6,7 @@ import { logger } from './config';
 import {uploadRouter} from './apis/upload.apis'
 import { config } from './config/config';
 import mongoose from 'mongoose';
+import { fileRouter } from './apis/file.apis';
 dotenv.config()
 
 
@@ -27,6 +28,7 @@ const startServer = () => {
   app.use(express.urlencoded({extended: false}))
   app.use(express.json())
   app.use("/api/upload", uploadRouter);
+  app.use("/api/file", fileRouter);
   app.get('/ping', (req, res, next)=>{
     res.status(200).json({message: 'pong'})
   })
