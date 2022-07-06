@@ -6,7 +6,7 @@
  */
 import { logger } from '../config';
 import fs from 'fs-extra';
-import {AwsCloudService} from './aws-storage.service';
+import {AwsStorageService} from './aws-storage.service';
 import MongoDBCurdService from './mongodb-curd.service';
 import * as ffmpeg from "fluent-ffmpeg";
 import { IMetaData } from '../model/metaData';
@@ -14,7 +14,7 @@ import { StorageKeys } from './data-uploader.service';
 
 
 
-const awsCloudService = new AwsCloudService()
+const awsStorageService = new AwsStorageService()
 const mongoDBCurdService = new MongoDBCurdService()
 
 export class AWSProviderService {
@@ -33,7 +33,7 @@ export class AWSProviderService {
     let fileName = filePathArray[filePathArray.length - 1]
     let key = `${fileName}`
     try{
-      await awsCloudService.uploadFileFromLoaclStorage(filePath, key, awsKey);
+      await awsStorageService.uploadFileFromLoaclStorage(filePath, key, awsKey);
       logger.debug('file upload success', key)
       return {
         sucess: true,
@@ -69,7 +69,7 @@ export class AWSProviderService {
         let key = `folderTwo/${fileName}`
         let filePath = `${folderPath}/${fileName}`
         try{
-          await awsCloudService.uploadFileFromLoaclStorage(filePath, key, awsKey);
+          await awsStorageService.uploadFileFromLoaclStorage(filePath, key, awsKey);
           keys.push(key)
           logger.debug('file upload success', key)
         }catch(error){
@@ -108,7 +108,7 @@ export class AWSProviderService {
         let filePath = `${folderPath}/${fileName}`
 
         try{
-          await awsCloudService.uploadFileFromLoaclStorage(`${folderPath}/${fileName}`, key, awsKey);
+          await awsStorageService.uploadFileFromLoaclStorage(`${folderPath}/${fileName}`, key, awsKey);
           logger.debug(`file path ${filePath}  upload success`, key)
           keys.push(key)
         }catch(error){
