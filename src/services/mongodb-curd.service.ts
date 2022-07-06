@@ -12,26 +12,23 @@ export default class MongoDBCurdService{
   constructor(
   ) {}
 
-  async createMetaData(data: IMetaData) {
-    const metaData = new MetaData({
-      _id: new mongoose.Types.ObjectId(),
-      ...data
-    })
-    metaData
-      .save()
-      .then(()=>{
-        logger.debug('metaData updated')
-      })
-      .catch(()=>{
-        logger.debug('metaData failed')
-      })
-  }
+
 
   async findMetaData(objectKey: string){
     return MetaData.findOne({objectKey: objectKey})
   }
 
   async updateMetaData(objectKey: string, newMetaData: IMetaData){
-    return MetaData.updateOne({objectKey: objectKey}, newMetaData)
+    return MetaData
+            .updateOne({objectKey: objectKey}, newMetaData)
+            .then(()=>{logger.debug('metaData update successed')})
+            .catch(()=>{logger.debug('metaData update failed')})
+  }
+
+  async createMetaData(newMetaData: IMetaData){
+    return MetaData
+            .create(newMetaData)
+            .then(()=>{logger.debug('metaData create successed')})
+            .catch(()=>{logger.debug('metaData create failed')})
   }
 }

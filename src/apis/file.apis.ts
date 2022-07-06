@@ -52,8 +52,8 @@ fileRouter.post('/fileDetails', async (req: Request, res: Response)=> {
     let objectKey: string = req.query.objectKey || req.body.objectKey
     delete req.body.objectKey
     try{
-      let metaData:any = await fileDetailsService.updateDataLakeMetadata(objectKey, req.body)
-      logger.debug(metaData)
+      let metaData: any = await fileDetailsService.updateDataLakeMetadata(objectKey, req.body)
+      //logger.debug(metaData)
       res.send({
         success: true,
         details: metaData
