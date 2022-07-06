@@ -25,7 +25,7 @@ export class FileDetailsService{
             createdDate: new Date(),
           }
         }else{
-          logger.debug(metaDataDetails)
+          //logger.debug(metaDataDetails)
           let frameRateArray = metaDataDetails.streams[0].avg_frame_rate ? metaDataDetails.streams[0].avg_frame_rate.split('/') : [0, 1];
           metaData = {
             fileName: fileName,
