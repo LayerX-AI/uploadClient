@@ -1,13 +1,10 @@
+
 import express, { Router,  Request, Response, NextFunction} from "express";
-import path from "path";
 import { logger } from "../config";
-import { AwsCloudService } from "../services/aws-storage.service";
 import { FileUploadService } from "../services/file-upload.service";
-import HttpError from 'http-errors'
 
 
 const uploadRouter = Router();
-const awsCloudService = new AwsCloudService()
 const fileUploadService = new FileUploadService()
 
 /**
