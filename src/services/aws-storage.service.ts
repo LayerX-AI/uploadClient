@@ -1,9 +1,13 @@
+/**
+ * @class AwsCloudService
+ * purpose of AwsCloudService is to handle upload of files to S3 bucket
+ * @description AwsCloudService handle AWS S3 upload from local storage
+ * @author chathushka
+ */
 import * as AWS from 'aws-sdk';
 import fs from 'fs-extra';
-import path from 'path';
 import { logger } from '../config';
 import { AwsConfiguration } from '../settings/aws-configuration.settings';
-import { FileUploadService } from './file-upload.service';
 
 const AWS_ACCESS_KEY = AwsConfiguration.AWS_ACCESS_KEY;
 const AWS_SECRET_KEY = AwsConfiguration.AWS_SECRET_KEY;
@@ -29,7 +33,11 @@ export class AwsCloudService {
     return s3Bucket;
   }
 
-
+  /**
+   * Use to upload single file from the local storage to AWS S3 bucket
+   * @param filePath {string} path of the file
+   * @param key {string} AWS S3 key
+   */
   async uploadFileFromLoaclStorage(filePath: string, key: string){
     let s3Bucket = await this.initAWS();
 
@@ -43,16 +51,14 @@ export class AwsCloudService {
     //     if (s3Err) throw s3Err
     //     console.log(`File uploaded successfully at ${data.Location}`)
     // });
-    try{
-      await s3Bucket.upload(params).promise();
-      logger.debug('file upload success', key)
-    }catch(err){
-      logger.error('file upload failed', err)
-    }
-    
+    await s3Bucket.upload(params).promise();
   };
 
-
+  /**
+   * Use to upload single file from the API call (Buffer) to AWS S3 bucket
+   * @param data {buffer} data buffer
+   * @param key {string} AWS S3 key
+   */
   async uploadFileAPI(data: string, key: string){
     let s3Bucket = this.initAWS();
 

@@ -15,6 +15,7 @@ export interface IMetaData {
     fileSize?: number;
     createdDate?: Date;
     frameCount?: number;
+    duration?: number
 }
 
 export interface MetaDataModel extends IMetaData, Document {}
@@ -35,6 +36,7 @@ const MetaDataSchema: Schema = new Schema(
       fileSize: { type: Number, required: false },
       createdDate: { type: Date, required: false },
       frameCount: { type: Number, required: false },
+      duration: { type: Number, required: false },
     },
     {
         versionKey: false

@@ -1,3 +1,9 @@
+/**
+ * @class MongoDBCurdService
+ * purpose of MongoDBCurdService is to handle CURD operations for create and update MetaData
+ * @description MongoDBCurdService is to handle CURD operations for create and update MetaData
+ * @author chathushka
+ */
 import mongoose from 'mongoose';
 import { logger } from '../config';
 import MetaData, { IMetaData } from '../model/metaData'

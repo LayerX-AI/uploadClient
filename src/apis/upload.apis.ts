@@ -10,16 +10,12 @@ const uploadRouter = Router();
 const awsCloudService = new AwsCloudService()
 const fileUploadService = new FileUploadService()
 
+/**
+ * API end point for upload single file from local storage
+ */
 uploadRouter.post('/uploadOneFile', async (req: Request, res: Response)=> {
   logger.debug('testing')
   
-
-  // let filePath = path.join(
-  //   __dirname,
-  //   '../../src/services/test.mp4'
-  // );
-  //if(!req.query.filePath)
-  //let filePath: string = req.query.filePath
   if(typeof req.query.filePath == "string"){
 
     let filePath: string = req.query.filePath
@@ -43,6 +39,10 @@ uploadRouter.post('/uploadOneFile', async (req: Request, res: Response)=> {
 })
 
 
+
+/**
+ * API end point for upload files inside single folder from local storage
+ */
 uploadRouter.post('/uploadFolder', async (req: Request, res: Response)=> {
   logger.debug('upload folder to storage')
 
@@ -69,10 +69,37 @@ uploadRouter.post('/uploadFolder', async (req: Request, res: Response)=> {
 })
 
 
-uploadRouter.get('/', (req: Request, res: Response, next: NextFunction)=> {
-  res.send('hello')
+/**
+ * API end point for upload files inside single folder recursively from local storage
+ */
+uploadRouter.post('/uploadFolderRecursively', async (req: Request, res: Response)=> {
+  logger.debug('upload folder to storage')
+
+  if(req.query.folderPath && typeof req.query.folderPath == "string"){
+
+    let folderPath: string = req.query.folderPath
+    try{
+      await fileUploadService.uploadFolderRecursivelyToStorage(folderPath)
+      res.send({
+        success: true
+      })
+    }catch(err){
+      res.send({
+        success: false,
+        error: err
+      })
+    }
+  }else{
+    res.send({
+      success: false
+    })
+  }
+  
 })
 
+/**
+ * test API end point
+ */
 uploadRouter.post('/next/:id', (req: Request, res: Response, next: NextFunction)=> {
   logger.debug(req.query)
   logger.debug(req.params)
