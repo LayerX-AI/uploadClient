@@ -63,7 +63,7 @@ export class AWSProviderService {
       //logger.debug(file, extention);
       if(types.includes(extention)){
         logger.debug(fileName, 'include');
-        let key = `folderTwo/${fileName}`
+        let key = `${fileName}`
         let filePath = `${folderPath}/${fileName}`
         try{
           await awsStorageService.uploadFileFromLoaclStorage(filePath, key, awsKey);
@@ -100,7 +100,7 @@ export class AWSProviderService {
       
       if(types.includes(extention)){
         logger.debug(fileName, 'include');
-        let key = `multiples/${fileName}`
+        let key = `${fileName}`
         let filePath = `${folderPath}/${fileName}`
 
         try{
