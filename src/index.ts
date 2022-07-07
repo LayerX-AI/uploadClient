@@ -12,15 +12,15 @@ dotenv.config()
 
 const app: Application = express();
 
-mongoose
-  .connect(config.mongo.url)
-  .then(()=>{
-    logger.debug('mongodb connected')
-    startServer()
-  })
-  .catch((error)=>{
-    logger.debug(error)
-  })
+// mongoose
+//   .connect(config.mongo.url)
+//   .then(()=>{
+//     logger.debug('mongodb connected')
+//     startServer()
+//   })
+//   .catch((error)=>{
+//     logger.debug(error)
+//   })
 
 const startServer = () => {
   
@@ -43,3 +43,4 @@ const startServer = () => {
   });
 
 }
+startServer()
