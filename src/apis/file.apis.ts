@@ -9,7 +9,7 @@ const fileDetailsService = new FileDetailsService()
 /**
  * API end point to get metaData of the file in local storage
  */
-fileRouter.post('/fileDetails', async (req: Request, res: Response)=> {
+fileRouter.post('/getfileDetails', async (req: Request, res: Response)=> {
   
   if(
     (req.query.filePath && typeof req.query.filePath == "string") ||

@@ -91,7 +91,7 @@ uploadRouter.post('/uploadFolderRecursively', async (req: Request, res: Response
 /**
  * API end point for upload files inside single folder recursively from local storage
  */
- uploadRouter.post('/initStorage', async (req: Request, res: Response)=> {
+ uploadRouter.post('/initializeStorage', async (req: Request, res: Response)=> {
   logger.debug('set storage keys')
   logger.debug(req.body)
 
