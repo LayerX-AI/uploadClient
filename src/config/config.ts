@@ -10,11 +10,17 @@ const MONGO_URL = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:$
 
 const SEVER_PORT = process.env.PORT ? Number(process.env.PORT) : 7070;
 
+const DATALAKE_BASE_URL = "http://104.154.225.244:3000"
+
 export const config = {
   mongo: {
     url: MONGO_URL
   },
   server: {
     port: SEVER_PORT
+  },
+  dataLake:{
+    baseUrl: DATALAKE_BASE_URL
   }
 }
+

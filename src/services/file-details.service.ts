@@ -12,8 +12,10 @@ export class FileDetailsService{
    * @param filePath {string} path to the file
    * @returns {object} metaData details object
    */
-	async getFileDetails(filePath: string){
-    let metaData = new Promise(function(resolve, reject) {
+	async getFileDetails(filePath: string): Promise<object>{
+    let metaData: object = new Promise(function(resolve, reject) {
+
+      //get meta data of the file by ffmpeg library
       ffmpeg.ffprobe(filePath, (err, metaDataDetails)=>{
         let metaData: IMetaData = {}
         let filePathArray = filePath.split(/\//)
@@ -38,7 +40,6 @@ export class FileDetailsService{
             createdDate: new Date(),
           }
         }else{
-          //logger.debug(metaDataDetails)
           let frameRateArray = metaDataDetails.streams[0].avg_frame_rate ? metaDataDetails.streams[0].avg_frame_rate.split('/') : [0, 1];
           metaData = {
             name: fileName,
@@ -50,8 +51,6 @@ export class FileDetailsService{
               width: metaDataDetails.streams[0].width || 0
             },
             frameRate: Number(frameRateArray[0])/Number(frameRateArray[1]) || 0,
-            //sourceLocation: key,
-            //sourceName: fileName
           }
         }
         
@@ -81,9 +80,11 @@ export class FileDetailsService{
           ...metaInfo
         }
       )
+      logger.debug('update MetaData successed')
       return metaDataObject
     }catch(err){
-      logger.error(err)
+      logger.error('update MetaData failed',err)
+      return err
     }
   }
 }

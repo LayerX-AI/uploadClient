@@ -7,6 +7,7 @@
 import { logger } from '../config';
 import { IMetaData } from '../model/metaData';
 import axios from 'axios';
+import { config } from '../config/config';
 
 export default class DataLakeAPIService{
   constructor(
@@ -19,7 +20,6 @@ export default class DataLakeAPIService{
         {metaDataObject: newMetaData}
       ],
     }
-    const data = await axios.post('http://104.154.225.244:3000/api/metadata/uploadMetadata', requestBody);
-    logger.debug(data)
+    await axios.post(`${config.dataLake.baseUrl}/api/metadata/uploadMetadata`, requestBody);
   }
 }
