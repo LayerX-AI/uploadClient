@@ -4,7 +4,7 @@ import { logger } from "../config";
 import { DataUploaderService, StorageKeys } from "../services/data-uploader.service";
 
 const uploadRouter = Router();
-const dataUploaderService = new DataUploaderService()
+let dataUploaderService: DataUploaderService
 
 /**
  * API end point for upload single file from local storage
@@ -111,7 +111,7 @@ uploadRouter.post('/uploadFolderRecursively', async (req: Request, res: Response
       bucket: req.body.bucket
     }
     try{
-      await dataUploaderService.init(storageType, keys)
+      dataUploaderService = new DataUploaderService(storageType, keys)
       res.send({
         success: true
       })
