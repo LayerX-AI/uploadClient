@@ -6,14 +6,9 @@
  */
 import { logger } from '../config';
 import fs from 'fs-extra';
-import {AwsStorageService} from './aws-storage.service';
 import { StorageKeys } from './data-uploader.service';
 import { StorageProviderService } from './storage-provider.service';
 import AWS, { S3 } from 'aws-sdk';
-
-
-
-const awsStorageService = new AwsStorageService()
 
 export class AWSProviderService extends StorageProviderService{
   public s3Bucket: AWS.S3
@@ -52,7 +47,7 @@ export class AWSProviderService extends StorageProviderService{
     let fileName = filePathArray[filePathArray.length - 1]
     let key = `${fileName}`
     try{
-      await awsStorageService.uploadFileFromLoaclStorage(filePath, key, this.s3Bucket, bucket);
+      await this.uploadFileFromLoaclStorage(filePath, key, bucket);
       logger.debug('file upload success', key)
       return {
         sucess: true,
@@ -87,7 +82,7 @@ export class AWSProviderService extends StorageProviderService{
         let key = `${fileName}`
         let filePath = `${folderPath}/${fileName}`
         try{
-          await awsStorageService.uploadFileFromLoaclStorage(filePath, key, this.s3Bucket, bucket);
+          await this.uploadFileFromLoaclStorage(filePath, key, bucket);
           keys.push(key)
           logger.debug('file upload success', key)
         }catch(error){
@@ -117,14 +112,13 @@ export class AWSProviderService extends StorageProviderService{
       let extention = fileNameArray[fileNameArray.length - 1]
       logger.debug(fileName, extention);
 
-      
       if(types.includes(extention)){
         logger.debug(fileName, 'include');
         let key = `${fileName}`
         let filePath = `${folderPath}/${fileName}`
 
         try{
-          await awsStorageService.uploadFileFromLoaclStorage(`${folderPath}/${fileName}`, key, this.s3Bucket, bucket);
+          await this.uploadFileFromLoaclStorage(`${folderPath}/${fileName}`, key, bucket);
           logger.debug(`file path ${filePath}  upload success`, key)
           keys.push(key)
         }catch(error){
@@ -137,5 +131,22 @@ export class AWSProviderService extends StorageProviderService{
         await this.uploadFolderRecursivelyToStorage(`${folderPath}/${fileName}`, keys, bucket);
       }
     }
+  };
+
+  /**
+   * Use to upload single file from the local storage to AWS S3 bucket
+   * @param filePath {string} path of the file
+   * @param key {string} AWS S3 key
+   */
+   async uploadFileFromLoaclStorage(filePath: string, key: string, bucket: string){
+    //let s3Bucket = await this.initAWS(awsKeys);
+
+    logger.debug(filePath)
+    const params = {
+        Bucket: bucket ?  bucket : 'testbucketdatalake', // pass your bucket name
+        Key: key, // file will be saved as key
+        Body: fs.createReadStream(filePath)
+    };
+    await this.s3Bucket.upload(params).promise();
   };
 }
