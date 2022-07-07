@@ -7,7 +7,6 @@
 import { logger } from '../config';
 import fs from 'fs-extra';
 import {AwsStorageService} from './aws-storage.service';
-import MongoDBCurdService from './mongodb-curd.service';
 import * as ffmpeg from "fluent-ffmpeg";
 import { IMetaData } from '../model/metaData';
 import { StorageKeys } from './data-uploader.service';
@@ -15,7 +14,6 @@ import { StorageKeys } from './data-uploader.service';
 
 
 const awsStorageService = new AwsStorageService()
-const mongoDBCurdService = new MongoDBCurdService()
 
 export class AWSProviderService {
   constructor(
@@ -46,7 +44,6 @@ export class AWSProviderService {
         objectKey: ''
       }
     }
-    //await this.updateDataLakeMetadata(key, fileName, filePath);
   };
 
   /**
@@ -76,7 +73,6 @@ export class AWSProviderService {
           logger.error(`file path ${filePath} upload failed`, error)
           continue
         }
-        //await this.updateDataLakeMetadata(key, fileName, filePath);
       }
     }
     return {
@@ -122,44 +118,4 @@ export class AWSProviderService {
       }
     }
   };
-
-  /**
-   * Use for get metadata and update them to database
-   * @param objectKey {string} S3 key of the file
-   * @param fileName {string} name of the file
-   * @param filePath {string} path of the file
-   */
-  async updateDataLakeMetadata(objectKey: string, fileName: string, filePath: string){
-    ffmpeg.ffprobe(filePath, (err, metaDataDetails)=>{
-      let metaData: IMetaData = {}
-      if(err){
-        logger.debug(err)
-        metaData = {
-          fileName: fileName,
-          objectKey: objectKey,
-          createdDate: new Date(),
-        }
-      }else{
-        logger.debug(metaDataDetails)
-        let frameRateArray = metaDataDetails.streams[0].avg_frame_rate ? metaDataDetails.streams[0].avg_frame_rate.split('/') : [0, 1];
-        metaData = {
-          fileName: fileName,
-          objectKey: objectKey,
-          objectType: metaDataDetails.streams[0].codec_type || '',
-          fileSize: metaDataDetails.format.size || 0,
-          duration: metaDataDetails.format.duration || 0,
-          createdDate: new Date(),
-          resolution: {
-            height: metaDataDetails.streams[0].height || 0,
-            width: metaDataDetails.streams[0].width || 0
-          },
-          frameRate: Number(frameRateArray[0])/Number(frameRateArray[1]) || 0,
-          //sourceLocation: key,
-          //sourceName: fileName
-        }
-      }
-      
-      mongoDBCurdService.createMetaData(metaData)
-    })
-  }
 }

@@ -6,9 +6,9 @@ export interface IMetaData {
     sourceId?: string;
     collectionName?: string;
     sourceLocation?: string;
-    objectType?: string;
+    objectType?: number;
     parentList?: string[];
-    fileName?: string;
+    name?: string;
     url?: string;
     frameRate?: number;
     resolution?: object;
@@ -27,9 +27,9 @@ const MetaDataSchema: Schema = new Schema(
       sourceId: { type: String, required: false },
       collectionName: { type: String, required: false },
       sourceLocation: { type: String, required: false },
-      objectType: { type: String, required: false },
+      objectType: { type: Number, required: false },
       parentList: { type: Array, required: false },
-      fileName: { type: String, required: false },
+      name: { type: String, required: false },
       url: { type: String, required: false },
       frameRate: { type: Number, required: false },
       resolution: { type: Object, required: false },

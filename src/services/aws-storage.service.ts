@@ -44,23 +44,4 @@ export class AwsStorageService {
     };
     await s3Bucket.upload(params).promise();
   };
-
-  // /**
-  //  * Use to upload single file from the API call (Buffer) to AWS S3 bucket
-  //  * @param data {buffer} data buffer
-  //  * @param key {string} AWS S3 key
-  //  */
-  // async uploadFileAPI(data: string, key: string, awsKeys: StorageKeys){
-  //   let s3Bucket = this.initAWS(awsKeys);
-
-  //   const params = {
-  //       Bucket: AWS_BUCKET_NAME || 'testbucketdatalake', // pass your bucket name
-  //       Key: key, // file will be saved as key
-  //       Body: data
-  //   };
-  //   (await s3Bucket).upload(params, function(s3Err: any, data: {Location: any;}) {
-  //       if (s3Err) throw s3Err
-  //       console.log(`File uploaded successfully at ${data.Location}`)
-  //   });
-  // };
 }

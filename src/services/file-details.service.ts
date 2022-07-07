@@ -1,9 +1,9 @@
 import { logger } from '../config';
 import * as ffmpeg from "fluent-ffmpeg";
 import { IMetaData } from '../model/metaData';
-import MongoDBCurdService from './mongodb-curd.service';
+import DataLakeAPIService from './dataLake-api.service';
 
-const mongoDBCurdService = new MongoDBCurdService()
+const dataLakeAPIService = new DataLakeAPIService()
 
 export class FileDetailsService{
 	
@@ -18,18 +18,31 @@ export class FileDetailsService{
         let metaData: IMetaData = {}
         let filePathArray = filePath.split(/\//)
         let fileName = filePathArray[filePathArray.length - 1]
+        let objectType = 0;
+        if(fileName){
+          let imageList = ['jpg', 'jpeg', 'png'];
+          let videoList = ['mp4', 'mkv'];
+          let fileNameSplitted = fileName.split('.')
+          let extention = fileNameSplitted[fileNameSplitted.length - 1];
+          if(imageList.includes(extention)){
+            objectType = 1
+          }
+          else if(videoList.includes(extention)){
+            objectType = 2
+          }
+        }
         if(err){
           logger.debug(err)
           metaData = {
-            fileName: fileName,
+            name: fileName,
             createdDate: new Date(),
           }
         }else{
           //logger.debug(metaDataDetails)
           let frameRateArray = metaDataDetails.streams[0].avg_frame_rate ? metaDataDetails.streams[0].avg_frame_rate.split('/') : [0, 1];
           metaData = {
-            fileName: fileName,
-            objectType: metaDataDetails.streams[0].codec_type || '',
+            name: fileName,
+            objectType: objectType,
             fileSize: metaDataDetails.format.size || 0,
             duration: metaDataDetails.format.duration || 0,
             resolution: {
@@ -58,23 +71,19 @@ export class FileDetailsService{
    */
   async updateDataLakeMetadata(objectKey: string, metaInfo: IMetaData){
     try{
-      let oldMetaData = await mongoDBCurdService.findMetaData(objectKey);
-      if(oldMetaData){
-        await mongoDBCurdService.updateMetaData(objectKey, metaInfo)
-        return {
-          objectKey: objectKey,
-          ...metaInfo
-        }
-      }else{
-        let metaData: IMetaData = {
-          objectKey: objectKey,
-          ...metaInfo
-        }
-        await mongoDBCurdService.createMetaData(metaData)
-        return metaData
+      let metaDataObject: IMetaData = {
+        objectKey: objectKey,
+        ...metaInfo
       }
+      await dataLakeAPIService.updateMetaData(
+        {
+          objectKey: objectKey,
+          ...metaInfo
+        }
+      )
+      return metaDataObject
     }catch(err){
-
+      logger.error(err)
     }
   }
 }
