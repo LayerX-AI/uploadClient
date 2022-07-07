@@ -7,8 +7,6 @@
 import { logger } from '../config';
 import fs from 'fs-extra';
 import {AwsStorageService} from './aws-storage.service';
-import * as ffmpeg from "fluent-ffmpeg";
-import { IMetaData } from '../model/metaData';
 import { StorageKeys } from './data-uploader.service';
 
 
