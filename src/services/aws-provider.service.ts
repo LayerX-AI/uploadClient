@@ -201,11 +201,11 @@ export class AWSProviderService extends StorageProviderService{
       await fileDetailsService.updateDataLakeMetadata(key, {
         thumbnailKey: thumbnailKey,
         ...fileDetails.summerizedMetaData
-      })
+      }, collectionName)
     }else{
       await fileDetailsService.updateDataLakeMetadata(key, {
         thumbnailKey: thumbnailKey,
-      })
+      }, collectionName)
     }
 
     

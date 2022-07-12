@@ -70,7 +70,7 @@ export class FileDetailsService{
    * @param objectKey {string} key of the file
    * @param metaInfo {object} meta data details of the file
    */
-  async updateDataLakeMetadata(objectKey: string, metaInfo: IMetaData){
+  async updateDataLakeMetadata(objectKey: string, metaInfo: IMetaData, collectionName?: string){
     try{
       let metaDataObject: IMetaData = {
         objectKey: objectKey,
@@ -80,7 +80,8 @@ export class FileDetailsService{
         {
           objectKey: objectKey,
           ...metaInfo
-        }
+        },
+        collectionName
       )
       logger.debug('update MetaData successed')
       return metaDataObject

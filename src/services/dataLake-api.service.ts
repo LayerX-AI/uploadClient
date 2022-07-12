@@ -12,14 +12,15 @@ import { config } from '../config/config';
 export default class DataLakeAPIService{
   constructor(
   ) {}
-  async updateMetaData(newMetaData: IMetaData){
+  async updateMetaData(newMetaData: IMetaData, collectionName?: string){
 
-    let requestBody = {
+    let requestBody: any = {
       apiKey: "testApiKey1",
       metaDataList: [
         {metaDataObject: newMetaData}
       ],
     }
+    if(collectionName) requestBody.collectionName = collectionName
     await axios.post(`${config.dataLake.baseUrl}/api/metadata/uploadMetadata`, requestBody);
   }
 }
