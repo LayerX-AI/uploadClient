@@ -1,5 +1,6 @@
 
 import express, { Router,  Request, Response, NextFunction} from "express";
+import { json } from "stream/consumers";
 import { logger } from "../config";
 import { DataUploaderService, StorageKeys } from "../services/data-uploader.service";
 
@@ -19,9 +20,10 @@ uploadRouter.post('/uploadOneFile', async (req: Request, res: Response)=> {
       let returnObj = await dataUploaderService.uploadObjectToStorage(filePath)
       res.send(returnObj)
     }catch(err){
+      logger.error(err)
       res.send({
         success: false,
-        error: err
+        error: String(err)
       })
     }
   }else{
@@ -43,13 +45,14 @@ uploadRouter.post('/uploadFolder', async (req: Request, res: Response)=> {
   if(req.query.folderPath && typeof req.query.folderPath == "string"){
 
     let folderPath: string = req.query.folderPath
+    logger.debug(folderPath)
     try{
       let returnObj = await dataUploaderService.uploadFolderToStorage(folderPath)
       res.send(returnObj)
     }catch(err){
       res.send({
         success: false,
-        error: err
+        error: String(err)
       })
     }
   }else{
@@ -76,7 +79,7 @@ uploadRouter.post('/uploadFolderRecursively', async (req: Request, res: Response
     }catch(err){
       res.send({
         success: false,
-        error: err
+        error: String(err)
       })
     }
   }else{

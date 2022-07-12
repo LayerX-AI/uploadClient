@@ -46,12 +46,14 @@ export class FileDetailsService{
             objectType: objectType,
             fileSize: metaDataDetails.format.size || 0,
             duration: metaDataDetails.format.duration || 0,
+            frameCount: 0,
             resolution: {
               height: metaDataDetails.streams[0].height || 0,
               width: metaDataDetails.streams[0].width || 0
             },
-            frameRate: Number(frameRateArray[0])/Number(frameRateArray[1]) || 0,
+            frameRate: Math.floor(Number(frameRateArray[0])/Number(frameRateArray[1]) || 0),
           }
+          metaData.frameCount = (metaData.duration || 0) * (metaData.frameRate || 0)
         }
         
         resolve({

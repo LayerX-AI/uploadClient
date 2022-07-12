@@ -51,4 +51,8 @@ export class StorageProviderService {
 
   }
 
+  async uploadThumbnailImage(filePath: string, fileName: string, key: string, bucket: string, collectionName: string){
+    
+  }
+
 }

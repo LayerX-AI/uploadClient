@@ -15,7 +15,8 @@ export interface IMetaData {
     fileSize?: number;
     createdDate?: Date;
     frameCount?: number;
-    duration?: number
+    duration?: number;
+    thumbnailKey?: string
 }
 
 export interface MetaDataModel extends IMetaData, Document {}
