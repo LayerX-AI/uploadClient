@@ -52,7 +52,7 @@ export class AWSProviderService extends StorageProviderService{
       logger.error('file upload failed', error)
       return {
         sucess: false,
-        error: error,
+        error: String(error),
         objectKeys: ['']
       }
     }
@@ -190,12 +190,13 @@ export class AWSProviderService extends StorageProviderService{
     else if(videoList.includes(extention)){
       details  = await thumbnailGenerator.videoThumbnailGenerator(filePath, fileName)
     }
-    logger.debug('thumb details: ', details)
+    //logger.debug('thumb details: ', details)
     let thumbnailKey = details.fileName
     if(collectionName) thumbnailKey = `${collectionName}/${thumbnailKey}`
     await this.uploadFileFromLoaclStorage(details.filePath, thumbnailKey, bucket);
 
     let fileDetails: any = await fileDetailsService.getFileDetails(filePath)
+    //logger.debug('file details: ', fileDetails)
     if(fileDetails && fileDetails.summerizedMetaData){
       await fileDetailsService.updateDataLakeMetadata(key, {
         thumbnailKey: thumbnailKey,

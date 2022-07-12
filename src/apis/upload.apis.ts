@@ -20,7 +20,7 @@ uploadRouter.post('/uploadOneFile', async (req: Request, res: Response)=> {
       let returnObj = await dataUploaderService.uploadObjectToStorage(filePath)
       res.send(returnObj)
     }catch(err){
-      logger.error(err)
+      logger.error('file upload failded',err)
       res.send({
         success: false,
         error: String(err)
@@ -28,7 +28,8 @@ uploadRouter.post('/uploadOneFile', async (req: Request, res: Response)=> {
     }
   }else{
     res.send({
-      success: false
+      success: false,
+      error: 'request doesnt have file path'
     })
   }
   
@@ -50,6 +51,7 @@ uploadRouter.post('/uploadFolder', async (req: Request, res: Response)=> {
       let returnObj = await dataUploaderService.uploadFolderToStorage(folderPath)
       res.send(returnObj)
     }catch(err){
+      logger.error('folder upload failded',err)
       res.send({
         success: false,
         error: String(err)
@@ -57,7 +59,8 @@ uploadRouter.post('/uploadFolder', async (req: Request, res: Response)=> {
     }
   }else{
     res.send({
-      success: false
+      success: false,
+      error: 'request doesnt have folder path'
     })
   }
   
@@ -77,6 +80,7 @@ uploadRouter.post('/uploadFolderRecursively', async (req: Request, res: Response
       let returnObj = await dataUploaderService.uploadFolderRecursivelyToStorage(folderPath)
       res.send(returnObj)
     }catch(err){
+      logger.error('folder upload failded',err)
       res.send({
         success: false,
         error: String(err)
@@ -84,7 +88,8 @@ uploadRouter.post('/uploadFolderRecursively', async (req: Request, res: Response
     }
   }else{
     res.send({
-      success: false
+      success: false,
+      error: 'request doesnt have folder path'
     })
   }
   

@@ -23,6 +23,10 @@ export class ThumbnailGenerator{
 
     let fileNameArray = fileName.split('.')
     fileName = fileNameArray[0]
+    if(fileNameArray.length > 2){
+      let newFileNameArray = fileNameArray.slice(0, fileNameArray.length - 1)
+      fileName = newFileNameArray.join('.')
+    }
     let fileObject: object = await new Promise(function(resolve, reject) {
 
       
@@ -82,6 +86,11 @@ export class ThumbnailGenerator{
 
     let fileNameArray = fileName.split('.')
     let fileNameWithoutExtension = fileNameArray[0]
+
+    if(fileNameArray.length > 2){
+      let newFileNameArray = fileNameArray.slice(0, fileNameArray.length - 1)
+      fileNameWithoutExtension = newFileNameArray.join('.')
+    }
     let outFilePath = `./tempThumbnailimages/${fileNameWithoutExtension}.${EXTENSION_TYPE}`
     await extractFrames({
       input: filePath,

@@ -72,11 +72,20 @@ export class DataUploaderService{
     logger.debug('keys: ', this.keys)
     //logger.debug(this.s3Bucket)
     let keysObject
-    if(this.storageServiceProvider){
-      keysObject = await this.storageServiceProvider.uploadObjectToStorage(filePath, this.keys.bucket || '')
+    try{
+      if(this.storageServiceProvider){
+        keysObject = await this.storageServiceProvider.uploadObjectToStorage(filePath, this.keys.bucket || '')
+      }
+      return keysObject
+    }catch(err){
+      logger.error('file upload failded', err)
+      return {
+        success: false,
+        error: String(err)
+      }
     }
     
-    return keysObject
+    
 	}
 
 
@@ -87,11 +96,20 @@ export class DataUploaderService{
    */
   async uploadFolderToStorage(folderPath: string){
     let keysObject
-    if(this.storageServiceProvider){
-      keysObject = await this.storageServiceProvider.uploadFolderToStorage(folderPath, this.keys.bucket || '')
-    } 
+    try{
+      if(this.storageServiceProvider){
+        keysObject = await this.storageServiceProvider.uploadFolderToStorage(folderPath, this.keys.bucket || '')
+      }
+      return keysObject 
+    }catch(err){
+      logger.error('folder upload failded', err)
+      return {
+        success: false,
+        error: String(err)
+      }
+    }
 
-    return keysObject
+    
 	}
 
   /**
@@ -101,12 +119,20 @@ export class DataUploaderService{
    */
   async uploadFolderRecursivelyToStorage(folderPath: string){
     let keyList: string[] = []
-    if(this.storageServiceProvider){
-      await this.storageServiceProvider.uploadFolderRecursivelyToStorage(folderPath, keyList, this.keys.bucket || '')
-    }
-    return {
-      success: true,
-      objectKeys: keyList
+    try{
+      if(this.storageServiceProvider){
+        await this.storageServiceProvider.uploadFolderRecursivelyToStorage(folderPath, keyList, this.keys.bucket || '')
+      }
+      return {
+        success: true,
+        objectKeys: keyList
+      }
+    }catch(err){
+      logger.error('folder upload failded', err)
+      return {
+        success: false,
+        error: String(err)
+      }
     }
 	}
 }
