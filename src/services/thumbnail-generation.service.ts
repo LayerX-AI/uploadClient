@@ -20,6 +20,7 @@ export class ThumbnailGenerator{
     //ffmpeg(filePath).size('640x480');
     let filePathArray = filePath.split(/\//)
     let fileName = filePathArray[filePathArray.length - 1]
+    logger.debug('thumbnail path', filePath, fileName)
 
     let fileNameArray = fileName.split('.')
     fileName = fileNameArray[0]

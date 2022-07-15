@@ -25,7 +25,7 @@ export class StorageProviderService {
   */
   async uploadObjectToStorage(filePath: string, bucket: string){
     return {
-      sucess: true,
+      success: true,
       objectKeys: ['']
     }
   };
@@ -37,7 +37,19 @@ export class StorageProviderService {
   */
   async uploadFolderToStorage(folderPath: string, bucket: string){
     return {
-      sucess: true,
+      success: true,
+      objectKeys: ['']
+    }
+  };
+
+  /**
+  * Use to process key and files paths of uploading files of folder to storage
+  * @param folderPath {string} path of the folder
+  * @returns 
+  */
+   async uploadFolderRecursively(folderPath: string, keys: string[], bucket: string){
+    return {
+      success: true,
       objectKeys: ['']
     }
   };
@@ -47,11 +59,12 @@ export class StorageProviderService {
   * @param folderPath {string} path of the folder
   * @returns 
   */
-  async uploadFolderRecursivelyToStorage(folderPath: string, keys: string[], bucket: string){
+  async uploadFolderRecursivelyToStorage(folderPath: string, keys: string[], bucket: string, collectionName: string, imageMetaDataList?: object[], videoMetaDataList?: object[]){
 
   }
 
-  async uploadThumbnailImage(filePath: string, fileName: string, key: string, bucket: string, collectionName: string){
+  async uploadThumbnailImage(filePath: string, fileName: string, key: string, bucket: string, collectionName: string, imageMetaDataList?: object[],
+    videoMetaDataList?: object[]){
     
   }
 

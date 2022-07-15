@@ -121,11 +121,12 @@ export class DataUploaderService{
     let keyList: string[] = []
     try{
       if(this.storageServiceProvider){
-        await this.storageServiceProvider.uploadFolderRecursivelyToStorage(folderPath, keyList, this.keys.bucket || '')
+        await this.storageServiceProvider.uploadFolderRecursively(folderPath, keyList, this.keys.bucket || '')
       }
       return {
         success: true,
-        objectKeys: keyList
+        objectKeys: keyList,
+        error: keyList.length == 0 ? 'folder path doesnt exist or empty' : '' 
       }
     }catch(err){
       logger.error('folder upload failded', err)
