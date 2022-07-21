@@ -27,10 +27,10 @@ export class FileDetailsService{
           let fileNameSplitted = fileName.split('.')
           let extention = fileNameSplitted[fileNameSplitted.length - 1];
           if(imageList.includes(extention)){
-            objectType = 1
+            objectType = 2
           }
           else if(videoList.includes(extention)){
-            objectType = 2
+            objectType = 1
           }
         }
         if(err){
